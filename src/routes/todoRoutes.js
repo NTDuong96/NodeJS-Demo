@@ -1,23 +1,20 @@
+// src/routes/todoRoutes.js
 const express = require('express');
-const { 
-  getAllTodos, 
-  getTodo, 
-  createTodo, 
-  updateTodo, 
-  deleteTodo 
-} = require('../controllers/todoController');
-
 const router = express.Router();
+const todoController = require('../controllers/todoController');
+const { protect, checkTodoOwnership } = require('../middleware/authMiddleware');
 
-router
-  .route('/')
-  .get(getAllTodos)
-  .post(createTodo);
+// Tất cả routes cần auth
+router.use(protect);
 
-router
-  .route('/:id')
-  .get(getTodo)
-  .put(updateTodo)
-  .delete(deleteTodo);
+// Routes
+router.route('/')
+  .get(todoController.getTodos)
+  .post(todoController.createTodo);
+
+router.route('/:id')
+  .get(checkTodoOwnership, todoController.getTodoById)
+  .put(checkTodoOwnership, todoController.updateTodo)
+  .delete(checkTodoOwnership, todoController.deleteTodo);
 
 module.exports = router;

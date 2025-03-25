@@ -18,8 +18,14 @@ app.use(express.json());
 app.use(cors());
 app.use(helmet());
 
+// Body parser
+app.use(express.json());
+
 // Routes
 app.use('/api/todos', require('./routes/todoRoutes'));
+app.use('/api/todos', todoRoutes);
+app.use('/api/users', userRoutes);
+
 
 // Home route
 app.get('/', (req, res) => {
